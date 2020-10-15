@@ -118,7 +118,6 @@ class QuizCreate {
     this.infoWrap.removeChild(event.target.param.category);
     this.infoWrap.removeChild(event.target.param.difficulty);
     this._showQuiz(event.target.param.quiz);
-    console.log(this.totalAnswer);
   }
   //ホーム画面に戻る
   _restartQuiz() {
