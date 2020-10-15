@@ -31,11 +31,10 @@ class QuizCreate {
         this._showQuiz(results);
       });
   }
+
   //クイズを表示する
   _showQuiz(quiz) {
     //問題数が0になったとき
-    console.log(this.subTitleVal);
-    console.log(this.messageVal);
     if (quiz.length === 0) {
       this.questionNumber = 0;
       this.subTitleVal.textContent = `あなたの正答数は${this.totalAnswer}です。`;
@@ -84,21 +83,17 @@ class QuizCreate {
       answerBtn.textContent = answerVal;
       answerList.appendChild(answerItem);
       answerItem.appendChild(answerBtn);
-      
+
       //ボタンを押して答えた時
-      answerBtn.addEventListener('click', {
+      answerBtn.addEventListener('click', this._replyQuestion.bind(this));
+      answerBtn.param = {
         answerList: answerList,
         quiz: quiz,
-        correct_answer: correctAnswer,
-        answer_btn: answerBtn.textContent,
+        correctAnswer: correctAnswer,
+        answerBtn: answerBtn.textContent,
         category: category,
         difficulty: difficulty,
-        handleEvent: this._replyQuestion,
-        infoWrap: this.infoWrap,
-        answerWrap: this.answerWrap,
-        totalAnswer: this.totalAnswer,
-        showQuiz: this._showQuiz
-      });
+      };
     }
   }
   //質問をシャッフルする
@@ -113,17 +108,17 @@ class QuizCreate {
     return questionItems;
   }
   //答えを押した後
-  _replyQuestion() {
-    if (this.correct_answer === this.answer_btn) {
+  _replyQuestion(event) {
+    if (event.target.param.correctAnswer === event.target.param.answerBtn) {
       this.totalAnswer++;
-      
     } else {
     }
-    this.quiz.shift();
-    this.answerWrap.removeChild(this.answerList);
-    this.infoWrap.removeChild(this.category);
-    this.infoWrap.removeChild(this.difficulty);
-    this.showQuiz(this.quiz);
+    event.target.param.quiz.shift();
+    this.answerWrap.removeChild(event.target.param.answerList);
+    this.infoWrap.removeChild(event.target.param.category);
+    this.infoWrap.removeChild(event.target.param.difficulty);
+    this._showQuiz(event.target.param.quiz);
+    console.log(this.totalAnswer);
   }
   //ホーム画面に戻る
   _restartQuiz() {
