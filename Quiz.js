@@ -6,13 +6,9 @@ class Quiz {
     this.correctAnswer = quiz.correct_answer;
     this.incorrectAnswers = quiz.incorrect_answers;
     this.question = quiz.question;
-    this.questionNumber = 1;
   }
-  
-  showQuiz(quizes) {
-    //タイトル
-    const subTitleVal = document.getElementById('sub-title');
-    subTitleVal.textContent = `問題${this.questionNumber++}`;
+  //クイズの表示
+  showQuiz() {
     //質問
     const messageVal = document.getElementById('message');
     messageVal.textContent = `${this.question}`;
@@ -25,19 +21,22 @@ class Quiz {
     const difficultyArea = document.createElement('div');
     difficultyArea.textContent = `[難易度]：${this.difficulty}`;
     infoWrap.appendChild(difficultyArea);
+  }
 
-    //ボタンを配置するエリア
-    const answerWrap = document.getElementById('btn-wrap');
-    const answerList = document.createElement('ul');
-    answerList.className = 'answer-list';
-    answerWrap.appendChild(answerList);
-
+  //答えるボタンの作成
+  createAnswerBtn() {
     //クイズを配列に入れる。
     let questionItems = [this.correctAnswer];
     for (let i = 0; i < this.incorrectAnswers.length; i++) {
       const questionItem = this.incorrectAnswers[i];
       questionItems.push(questionItem);
     }
+    //ボタンを配置するエリア
+    const answerWrap = document.getElementById('btn-wrap');
+    const answerList = document.createElement('ul');
+    answerList.className = 'answer-list';
+    answerWrap.appendChild(answerList);
+
     this._shuffleAnswer(questionItems);
 
     for (let i = 0; i < questionItems.length; i++) {
@@ -48,16 +47,6 @@ class Quiz {
       answerBtn.textContent = answerVal;
       answerList.appendChild(answerItem);
       answerItem.appendChild(answerBtn);
-      //ボタンを押して答えた時
-      answerBtn.addEventListener('click', this._replyQuestion.bind(this));
-      answerBtn.param = {
-        quizes: quizes,
-        answerList: answerList,
-        correctAnswer: this.correctAnswer,
-        answerBtn: answerBtn.textContent,
-        category: categoryArea,
-        difficulty: difficultyArea,
-      };
     }
   }
   //質問をシャッフルする
@@ -70,24 +59,5 @@ class Quiz {
       questionItems[i] = val;
     }
     return questionItems;
-  }
-  //答えを押した後
-  _replyQuestion(event) {
-    if (event.target.param.correctAnswer === event.target.param.answerBtn) {
-      this.totalAnswer++;
-    } else {
-    }
-    const answerWrap = document.getElementById('btn-wrap');
-    const infoWrap = document.getElementById('info');
-    answerWrap.removeChild(event.target.param.answerList);
-    infoWrap.removeChild(event.target.param.category);
-    infoWrap.removeChild(event.target.param.difficulty);
-    event.target.param.quizes.shift();
-    console.log(event.target.param.quizes);
-    this.showQuiz();
-  }
-  //ホーム画面に戻る
-  _restartQuiz() {
-    window.location.reload();
   }
 }
